@@ -4,43 +4,60 @@ import java.util.Scanner;
 import java.util.Stack;
 
 public class Bai_1 {
-	public static void main(String[] args) {
-		String input = "{}";
-		Stack<Character> stack = new Stack<>();
-		int[] count = new int[3];
 
-		for (int i = 0; i < input.length(); i++) {
-			char c = input.charAt(i);
-			if (c == '(' || c == '{' || c == '[') {
-				stack.push(c);
-			} else if (c == ')' || c == '}' || c == ']') {
-				if (stack.isEmpty()) {
-					System.out.println("False");
-					return;
-				}
-				char top = stack.pop();
-				if ((c == ')' && top != '(') || (c == '}' && top != '{') || (c == ']' && top != '[')) {
-					System.out.println("False");
-					return;
-				}
-				if (c == ')') {
-					count[0]++;
-				} else if (c == '}') {
-					count[1]++;
-				} else {
-					count[2]++;
-				}
-			}
-		}
+	    public static void main(String[] args) {
+	        Scanner scanner = new Scanner(System.in);
 
-		if (stack.isEmpty()) {
-			System.out.println("True");
-			System.out.println("Số lượng cặp ngoặc đơn: " + count[0]);
-			System.out.println("Số lượng cặp ngoặc nhọn: " + count[1]);
-			System.out.println("Số lượng cặp ngoặc vuông: " + count[2]);
-		} else {
-			System.out.println("False");
-		}
+	        System.out.print("Nhập chuỗi kí tự chứa dấu ngoặc: ");
+	        String input = scanner.nextLine();
+
+	        boolean isValid = isValidBracket(input);
+
+	        if (isValid) {
+	            System.out.println("True");
+	            inrasocapngoac(input);
+	        } else {
+	            System.out.println("False");
+	        }
+	    }
+
+	    public static boolean isValidBracket(String s) {
+	        Stack<Character> stack = new Stack<>();
+
+	        for (char c : s.toCharArray()) {
+	            if (c == '(' || c == '[' || c == '{') {
+	                stack.push(c);
+	            } else if (c == ')' && !stack.isEmpty() && stack.peek() == '(') {
+	                stack.pop();
+	            } else if (c == ']' && !stack.isEmpty() && stack.peek() == '[') {
+	                stack.pop();
+	            } else if (c == '}' && !stack.isEmpty() && stack.peek() == '{') {
+	                stack.pop();
+	            } else {
+	                return false;
+	            }
+	        }
+
+	        return stack.isEmpty();
+	    }
+
+	    public static void inrasocapngoac(String s) {
+	        Stack<Integer> stack = new Stack<>();
+
+	        for (int i = 0; i < s.length(); i++) {
+	            char c = s.charAt(i);
+
+	            if (c == '(' || c == '[' || c == '{') {
+	                stack.push(i);
+	            } else if (c == ')' || c == ']' || c == '}') {
+	                if (!stack.isEmpty()) {
+	                    int start = stack.pop();
+	                    String bracketPair = s.substring(start, i + 1);
+	                    System.out.println(bracketPair + ": " + (i - start));
+	                }
+	            }
+	        }
+	    }
 	}
 
-}
+
